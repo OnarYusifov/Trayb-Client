@@ -74,13 +74,13 @@ import { RoundwinboxComponent } from "../roundwinbox/roundwinbox.component";
   styleUrl: "./observer.component.css",
 })
 export class ObserverComponent implements OnInit {
-  protected spectraStatus: Status = { message: "Initializing", statusType: StatusTypes.NEUTRAL };
+  protected traybStatus: Status = { message: "Initializing", statusType: StatusTypes.NEUTRAL };
   protected gameStatus: Status = { message: "Waiting", statusType: StatusTypes.NEUTRAL };
   protected darkModeEnabled: boolean = false;
   protected editable: boolean = true;
   protected tryingToConnect: boolean = false;
 
-  protected isSupporter: boolean = false;
+  protected isSupporter: boolean = true;
 
   protected drawerVisible: boolean = false;
   protected checklistItems: MenuItem[] = [
@@ -276,7 +276,7 @@ export class ObserverComponent implements OnInit {
   };
 
   protected watermarkInfo: WatermarkInfo = {
-    spectraWatermark: true,
+    traybWatermark: true,
     customTextEnabled: false,
     customText: "",
   };
@@ -392,13 +392,13 @@ export class ObserverComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.electron.spectraStatusMessage.subscribe((status: Status) => {
+    this.electron.traybStatusMessage.subscribe((status: Status) => {
       if (status.statusType === StatusTypes.GREEN) {
         if (ingestServerOptions.includes(this.basicInfo.ingestIp || "")) {
           this.localStorageService.setItem("lastConnectionOfficialSuccess", true);
         }
       }
-      this.spectraStatus = status;
+      this.traybStatus = status;
       this.changeDetectorRef.detectChanges();
     });
 
@@ -448,20 +448,8 @@ export class ObserverComponent implements OnInit {
     this.electron.confirmCloseDecision(decided === true);
   }
 
-  protected roundWinBoxCheckSpectraPlus() {
-    if (this.isSupporter) return this.roundWinBox;
-    if (this.roundWinBox.type != "sponsors")
-      return {
-        type: this.roundWinBox.type,
-        sponsors: [],
-      };
-    const roundWinBoxFirstSponsor = this.roundWinBox.sponsors[0];
-    roundWinBoxFirstSponsor.roundCeremony = ["all"];
-    roundWinBoxFirstSponsor.wonTeam = "all";
-    return {
-      type: this.roundWinBox.type,
-      sponsors: [roundWinBoxFirstSponsor],
-    };
+  protected roundWinBoxCheckTraybPlus() {
+    return this.roundWinBox;
   }
 
   protected onConnectClick() {
@@ -526,7 +514,7 @@ export class ObserverComponent implements OnInit {
       this.watermarkInfo,
       this.playercamsInfo,
       this.timeoutInfo,
-      this.roundWinBoxCheckSpectraPlus(),
+      this.roundWinBoxCheckTraybPlus(),
     );
 
     this.saveAllValues();
@@ -563,7 +551,7 @@ export class ObserverComponent implements OnInit {
     }, 2500);
     this.http
       .post(
-        "https://mapban.valospectra.com/api/createSession",
+        "https://mapban.trayb.az/api/createSession",
         {
           teams: [this.leftTeamInfo, this.rightTeamInfo],
         },
@@ -581,7 +569,7 @@ export class ObserverComponent implements OnInit {
             this.extrasIssueMessage = "";
             this.changeDetectorRef.detectChanges();
             this.electron.openExternalLink(
-              `https://mapban.valospectra.com/session/org/${response.sessionIdentifier}/${response.sessionSecret}`,
+              `https://mapban.trayb.az/session/org/${response.sessionIdentifier}/${response.sessionSecret}`,
             );
           } else {
             this.extrasIssueMessage =
@@ -592,10 +580,10 @@ export class ObserverComponent implements OnInit {
         error: (error) => {
           if (error.status === 0) {
             this.extrasIssueMessage =
-              "Error creating Mapban session. Couldn't reach Spectra server.";
+              "Error creating Mapban session. Couldn't reach Trayb server.";
           } else if (error.status === 401 || error.status === 403) {
             this.extrasIssueMessage =
-              "Error creating Mapban session: Unable to authorize with server. Using Spectra Mapban requires a valid Organization Key.";
+              "Error creating Mapban session: Unable to authorize with server. Using Trayb Mapban requires a valid Organization Key.";
           } else {
             this.extrasIssueMessage =
               "Error creating Mapban session. Please check your inputs and try again.";
@@ -622,7 +610,7 @@ export class ObserverComponent implements OnInit {
     }
 
     this.http
-      .put(`https://eu-extras.valospectra.com/createPreview`, {
+      .put(`https://extras.trayb.az/createPreview`, {
         // .put(`http://localhost:5101/createPreview`, {
         type: "preview",
         clientVersion: "1.0.0",
@@ -643,7 +631,7 @@ export class ObserverComponent implements OnInit {
           },
           tournamentInfo: this.tournamentInfo,
           timeoutDuration: this.tournamentInfo.timeoutDuration,
-          roundWinBox: this.roundWinBoxCheckSpectraPlus(),
+          roundWinBox: this.roundWinBoxCheckTraybPlus(),
           sponsorInfo: this.sponsorInfo,
         },
       })
@@ -656,7 +644,7 @@ export class ObserverComponent implements OnInit {
             this.previewCode = response.previewCode;
             console.log("Preview code created successfully:", this.previewCode);
             this.electron.openExternalLink(
-              `https://auto.valospectra.com/testing?previewCode=${this.previewCode}`,
+              `https://overlay.trayb.az/testing?previewCode=${this.previewCode}`,
               // `http://localhost:4200/testing?previewCode=${this.previewCode}`,
             );
           } else {
@@ -667,7 +655,7 @@ export class ObserverComponent implements OnInit {
         },
         error: (error) => {
           if (error.status === 0) {
-            this.extrasIssueMessage = "Failed to create preview. Couldn't reach Spectra server.";
+            this.extrasIssueMessage = "Failed to create preview. Couldn't reach Trayb server.";
           } else {
             this.extrasIssueMessage =
               "Failed to create preview. Please check your inputs and try again.";
@@ -802,7 +790,7 @@ export class ObserverComponent implements OnInit {
   }
 
   copyToClipboardClick() {
-    const link = `https://${this.basicInfo.ingestIp}/overlay?groupCode=${this.basicInfo.groupCode}`;
+    const link = `https://overlay.trayb.az/overlay?groupCode=${this.basicInfo.groupCode}`;
     navigator.clipboard.writeText(link);
   }
 
@@ -818,11 +806,11 @@ export class ObserverComponent implements OnInit {
   }
 
   protected openSupportUs() {
-    window.open(`https://valospectra.com/support?dark=${this.darkModeEnabled}`, "_blank");
+    window.open(`https://trayb.az/support?dark=${this.darkModeEnabled}`, "_blank");
   }
 
-  protected onIsSupporterChanged(newState: boolean) {
-    this.isSupporter = newState;
+  protected onIsSupporterChanged(_newState: boolean) {
+    this.isSupporter = true;
   }
 
   protected onMidMatchClick() {
@@ -998,7 +986,7 @@ export type SponsorInfo = {
 };
 
 export type WatermarkInfo = {
-  spectraWatermark: boolean;
+  traybWatermark: boolean;
   customTextEnabled: boolean;
   customText: string;
 };

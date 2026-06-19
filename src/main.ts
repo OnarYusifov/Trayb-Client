@@ -41,7 +41,7 @@ if (!lock) {
     }
 
     for (const arg of cli) {
-      if (arg.startsWith("ps-spectra://")) {
+      if (arg.startsWith("ps-trayb://")) {
         handleDeeplink(_event, arg);
       }
     }
@@ -113,7 +113,7 @@ const createWindow = () => {
     resizable: !isAuxiliary,
     fullscreenable: false,
     icon: iconPath,
-    title: "Spectra Client",
+    title: "Trayb Client",
     show: false,
   });
 
@@ -226,7 +226,7 @@ const createWindow = () => {
 
   // Trying to load the support page in a new window resulted in loading about:blank all of the time, so we do this hacky workaround
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("https://valospectra.com/support")) {
+    if (url.startsWith("https://trayb.az/support")) {
       const supportWindow = new BrowserWindow({
         webPreferences: {
           preload: path.join(__dirname, "./preload.js"),
@@ -236,7 +236,7 @@ const createWindow = () => {
         fullscreenable: false,
         autoHideMenuBar: true,
         icon: iconPath,
-        title: "Support Spectra",
+        title: "Support Trayb",
         show: false,
       });
 
@@ -282,7 +282,7 @@ const createWindow = () => {
     //     fullscreenable: false,
     //     autoHideMenuBar: true,
     //     icon: iconPath,
-    //     title: "Support Spectra",
+    //     title: "Support Trayb",
     //   },
     // };
   });
@@ -313,7 +313,7 @@ app.whenReady().then(async () => {
   createWindow();
   const updateAvailable = await updateCheck();
   if (updateAvailable) {
-    shell.openExternal(`https://valospectra.com/download`);
+    shell.openExternal(`https://trayb.az/download`);
     app.quit();
     // return to not init overwolf
     return;
@@ -379,7 +379,7 @@ function createTray(iconPath: string) {
     return;
   }
   tray = new Tray(iconPath);
-  tray.setToolTip("Spectra Client");
+  tray.setToolTip("Trayb Client");
   log.info(
     "Creating system tray icon (traySetting=" +
       traySetting +
@@ -389,7 +389,7 @@ function createTray(iconPath: string) {
   );
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "Open Spectra",
+      label: "Open Trayb",
       click: () => {
         win.show();
       },
@@ -434,7 +434,7 @@ function processInputs(
     if (leftTeam.name === "" || leftTeam.tricode === "" || leftTeam.url === "") {
       if (rightTeam.name === "" || rightTeam.tricode === "" || rightTeam.url === "") {
         messageBox(
-          "Spectra Client - Error",
+          "Trayb Client - Error",
           "Please input data into all fields!",
           messageBoxType.ERROR,
         );
@@ -451,7 +451,7 @@ function processInputs(
         rightTeam.url == undefined
       ) {
         messageBox(
-          "Spectra Client - Error",
+          "Trayb Client - Error",
           "Please input data into all fields!",
           messageBoxType.ERROR,
         );
@@ -483,7 +483,7 @@ function processInputs(
 
     if (!allow) {
       messageBox(
-        "Spectra Client - Error",
+        "Trayb Client - Error",
         "Please input data into all fields!",
         messageBoxType.ERROR,
       );
@@ -527,7 +527,7 @@ function processInputs(
       hotkeys.enabled.showToast,
     );
   } catch (error: any) {
-    messageBox("Spectra Client - Error", error.message, messageBoxType.ERROR);
+    messageBox("Trayb Client - Error", error.message, messageBoxType.ERROR);
     return;
   }
 
@@ -540,7 +540,7 @@ function processInputs(
   log.info(
     `Received Observer Name ${obsName}, Group Code ${groupCode}, Key ${key}, Left Tricode ${leftTeam.tricode}, Right Tricode ${rightTeam.tricode}`,
   );
-  setSpectraStatus("Connecting", StatusTypes.YELLOW);
+  setTraybStatus("Connecting", StatusTypes.YELLOW);
   connService.handleAuthProcess(
     ingestIp,
     obsName,
@@ -562,7 +562,7 @@ function processInputs(
 }
 
 function processAuxInputs(_event: any, ingestIp: string, name: string) {
-  setSpectraStatus("Connecting", StatusTypes.YELLOW);
+  setTraybStatus("Connecting", StatusTypes.YELLOW);
   connService.handleAuxAuthProcess(ingestIp, name, win);
 }
 
@@ -570,7 +570,7 @@ function processConfigDrop(_event: any, filePath: string) {
   log.info(`Reading config data from ${filePath}`);
   if (!filePath.endsWith(".scg")) {
     messageBox(
-      "Spectra Client - Error",
+      "Trayb Client - Error",
       "Invalid file type! Please drop a .scg file",
       messageBoxType.ERROR,
     );
@@ -579,7 +579,7 @@ function processConfigDrop(_event: any, filePath: string) {
   }
   if (connService.isConnected()) {
     messageBox(
-      "Spectra Client - Error",
+      "Trayb Client - Error",
       "Cannot change config while connected!",
       messageBoxType.ERROR,
     );
@@ -588,15 +588,15 @@ function processConfigDrop(_event: any, filePath: string) {
   }
   try {
     const data = JSON.parse(readFileSync(filePath).toString());
-    if (validateSpectraConfig(data)) {
+    if (validateTraybConfig(data)) {
       win.webContents.send("load-config", data);
     } else {
-      messageBox("Spectra Client - Error", "Invalid Spectra Config!", messageBoxType.ERROR);
+      messageBox("Trayb Client - Error", "Invalid Trayb Config!", messageBoxType.ERROR);
       log.info(`Aborting config change - invalid config`);
       return;
     }
   } catch (e) {
-    messageBox("Spectra Client - Error", "Could not parse Spectra Config!", messageBoxType.ERROR);
+    messageBox("Trayb Client - Error", "Could not parse Trayb Config!", messageBoxType.ERROR);
     log.error(`Error reading config file: ${e}`);
     return;
   }
@@ -606,7 +606,7 @@ function processLog(_event: any, message: string) {
   log.info(message);
 }
 
-function validateSpectraConfig(data: any) {
+function validateTraybConfig(data: any) {
   if (!data.groupCode) return false;
   if (!data.ingestIp) return false;
   if (!data.leftTeam) return false;
@@ -634,8 +634,8 @@ function nativeCheck() {
       if (p.name !== "Overwolf.exe") continue;
       log.info(`Found Overwolf process with PID ${p.pid}`);
       const button = messageBox(
-        "Spectra Client - Overwolf GEP Conflict",
-        "Regular Overwolf is running!\nIf you continue without stopping Overwolf, the risk of experiencing issues with game data is increased.\n\nDo you want Spectra to stop regular Overwolf now?",
+        "Trayb Client - Overwolf GEP Conflict",
+        "Regular Overwolf is running!\nIf you continue without stopping Overwolf, the risk of experiencing issues with game data is increased.\n\nDo you want Trayb to stop regular Overwolf now?",
         messageBoxType.WARNING,
         ["Stop Overwolf", "Continue with added risk"],
       );
@@ -646,7 +646,7 @@ function nativeCheck() {
         } catch (e) {
           log.error("Error killing Overwolf process:", e);
           messageBox(
-            "Spectra Client - Failed to stop Overwolf",
+            "Trayb Client - Failed to stop Overwolf",
             "Failed to automatically stop Overwolf.\nPlease manually close Overwolf by right-clicking the Overwolf icon in the tray and selecting 'Exit Overwolf'.",
             messageBoxType.ERROR,
           );
@@ -661,7 +661,7 @@ function nativeCheck() {
 async function updateCheck(): Promise<boolean> {
   try {
     const versionData = (
-      await axios.get("https://api.github.com/repos/ValoSpectra/Spectra-Client/releases")
+      await axios.get("https://api.github.com/repos/Trayb/Trayb-Client/releases")
     ).data[0];
     const releaseVersion = versionData.tag_name.replace("v", "");
     const releaseName = versionData.name;
@@ -671,7 +671,7 @@ async function updateCheck(): Promise<boolean> {
 
     if (!latestRelease || !currentRelease) {
       messageBox(
-        "Spectra Client - Update Check Failed",
+        "Trayb Client - Update Check Failed",
         "The automatic update check failed - please manually check if a new version of the client is available!",
         messageBoxType.WARNING,
       );
@@ -686,8 +686,8 @@ async function updateCheck(): Promise<boolean> {
     if (semver.gt(latestRelease, currentRelease)) {
       log.info(`New client version available: ${latestRelease} (current: ${currentRelease})`);
       const button = messageBox(
-        "Spectra Client - Update Available",
-        `A new version of the Spectra Client is available. Please update to the latest version.\n\nCurrent version: ${currentRelease}\nLatest version: ${releaseName}`,
+        "Trayb Client - Update Available",
+        `A new version of the Trayb Client is available. Please update to the latest version.\n\nCurrent version: ${currentRelease}\nLatest version: ${releaseName}`,
         messageBoxType.WARNING,
         ["Update"],
       );
@@ -703,7 +703,7 @@ async function updateCheck(): Promise<boolean> {
     }
   } catch (error) {
     messageBox(
-      "Spectra Client - Update Check Failed",
+      "Trayb Client - Update Check Failed",
       "The automatic update check failed - please manually check if a new version of the client is available!",
       messageBoxType.WARNING,
     );
@@ -763,9 +763,9 @@ export enum StatusTypes {
   YELLOW = "warn",
   GREEN = "success",
 }
-export function setSpectraStatus(message: string, type: StatusTypes = StatusTypes.NEUTRAL) {
-  win.webContents.send("set-spectra-status", { message: message, statusType: type });
-  win.setTitle(`Spectra Client | ${message}`);
+export function setTraybStatus(message: string, type: StatusTypes = StatusTypes.NEUTRAL) {
+  win.webContents.send("set-trayb-status", { message: message, statusType: type });
+  win.setTitle(`Trayb Client | ${message}`);
 }
 
 export function setGameStatus(message: string, type: StatusTypes = StatusTypes.NEUTRAL) {
@@ -844,12 +844,12 @@ export function isDev() {
 function deeplinkSetup() {
   if (process.defaultApp) {
     if (process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient("ps-spectra", process.execPath, [
+      app.setAsDefaultProtocolClient("ps-trayb", process.execPath, [
         path.resolve(process.argv[1]),
       ]);
     }
   } else {
-    app.setAsDefaultProtocolClient("ps-spectra");
+    app.setAsDefaultProtocolClient("ps-trayb");
   }
 }
 

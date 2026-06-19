@@ -73,7 +73,7 @@ export class PlayercamsComponent implements OnInit {
     this.http
       .post(
         // "http://localhost:11300/api/createSession",
-        "https://playercams.valospectra.com/api/createSession",
+        "https://playercams.trayb.az/api/createSession",
         {},
         {
           headers: {
@@ -97,7 +97,7 @@ export class PlayercamsComponent implements OnInit {
               " your time.";
             this.electron.openExternalLink(
               // `http://localhost:11300/session/org/${response.sessionIdentifier}/${response.sessionSecret}`,
-              `https://playercams.valospectra.com/session/org/${response.sessionIdentifier}/${response.sessionSecret}`,
+              `https://playercams.trayb.az/session/org/${response.sessionIdentifier}/${response.sessionSecret}`,
             );
             this.runValidation();
             this.localStorageService.setItem("playercams", this.data);
@@ -122,7 +122,7 @@ export class PlayercamsComponent implements OnInit {
   onSessionBrowserClick() {
     if (this.data.identifier && this.data.secret) {
       this.electron.openExternalLink(
-        `https://playercams.valospectra.com/session/org/${this.data.identifier}/${this.data.secret}`,
+        `https://playercams.trayb.az/session/org/${this.data.identifier}/${this.data.secret}`,
       );
     }
   }

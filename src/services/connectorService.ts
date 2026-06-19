@@ -7,7 +7,7 @@ import {
   setGameStatus,
   setInputAllowed,
   rememberMatchSecret,
-  setSpectraStatus,
+  setTraybStatus,
   StatusTypes,
 } from "../main";
 import {
@@ -127,7 +127,7 @@ export class ConnectorService {
       if (json.type === DataTypes.AUTH) {
         if (json.value === true) {
           log.info("Authentication successful!");
-          setSpectraStatus("Connected", StatusTypes.GREEN);
+          setTraybStatus("Connected", StatusTypes.GREEN);
           rememberMatchSecret(json.reason);
           this.connected = true;
           HotkeyService.getInstance().activateAllHotkeys();
@@ -136,11 +136,11 @@ export class ConnectorService {
         } else {
           log.info("Authentication failed!");
           messageBox(
-            "Spectra Client - Error",
+            "Trayb Client - Error",
             `Connection failed, reason: ${json.reason}`,
             messageBoxType.ERROR,
           );
-          setSpectraStatus("Connection Failed", StatusTypes.RED);
+          setTraybStatus("Connection Failed", StatusTypes.RED);
           this.setDisconnected();
           this.ws?.disconnect();
         }
@@ -148,41 +148,41 @@ export class ConnectorService {
     });
 
     this.ws.on("close", () => {
-      log.info("Connection to spectra server closed");
+      log.info("Connection to trayb server closed");
       if (this.unreachable === true) {
-        // this.win.setTitle(`Spectra Client | Connection failed, server not reachable`);
-        setSpectraStatus("Server Unreachable", StatusTypes.RED);
+        // this.win.setTitle(`Trayb Client | Connection failed, server not reachable`);
+        setTraybStatus("Server Unreachable", StatusTypes.RED);
 
-        messageBox("Spectra Client - Error", "Spectra server not reachable!", messageBoxType.ERROR);
+        messageBox("Trayb Client - Error", "Trayb server not reachable!", messageBoxType.ERROR);
       } else {
-        // this.win.setTitle(`Spectra Client | Connection closed`);
-        setSpectraStatus("Connection Closed", StatusTypes.NEUTRAL);
+        // this.win.setTitle(`Trayb Client | Connection closed`);
+        setTraybStatus("Connection Closed", StatusTypes.NEUTRAL);
       }
       this.setDisconnected();
       this.ws?.disconnect();
     });
 
     this.ws.on("error", (e: any) => {
-      log.info("Failed connection to spectra server - is it up?");
+      log.info("Failed connection to trayb server - is it up?");
       if (e.code === "ECONNREFUSED") {
-        // this.win.setTitle(`Spectra Client | Connection failed, server not reachable`);
-        setSpectraStatus("Server Unreachable", StatusTypes.RED);
+        // this.win.setTitle(`Trayb Client | Connection failed, server not reachable`);
+        setTraybStatus("Server Unreachable", StatusTypes.RED);
         this.unreachable = true;
       } else {
-        // this.win.setTitle(`Spectra Client | Connection failed`);
-        setSpectraStatus("Connection Closed", StatusTypes.NEUTRAL);
+        // this.win.setTitle(`Trayb Client | Connection failed`);
+        setTraybStatus("Connection Closed", StatusTypes.NEUTRAL);
       }
       log.error(e);
     });
 
     this.ws.io.on("reconnect_attempt", (attempt: number) => {
-      log.info(`Reconnecting to spectra server, attempt ${attempt}`);
-      // this.win.setTitle(`Spectra Client | Connection lost, attempting reconnect...`);
-      setSpectraStatus("Reconnecting", StatusTypes.YELLOW);
+      log.info(`Reconnecting to trayb server, attempt ${attempt}`);
+      // this.win.setTitle(`Trayb Client | Connection lost, attempting reconnect...`);
+      setTraybStatus("Reconnecting", StatusTypes.YELLOW);
     });
 
     this.ws.io.on("reconnect", () => {
-      log.info(`Spectra Client | Reconnected`);
+      log.info(`Trayb Client | Reconnected`);
     });
 
     const logonData: IAuthenticationData = {
@@ -225,7 +225,7 @@ export class ConnectorService {
     log.info(`Attempting to connect to ${this.INGEST_SERVER_URL} for match ${this.MATCH_ID}`);
     if (this.MATCH_ID === "") {
       log.info("Match ID not set, cannot connect");
-      setSpectraStatus("No Match ID", StatusTypes.RED);
+      setTraybStatus("No Match ID", StatusTypes.RED);
       return;
     }
 
@@ -248,7 +248,7 @@ export class ConnectorService {
       if (json.type === DataTypes.AUX_AUTH) {
         if (json.value === true) {
           log.info("Authentication successful!");
-          setSpectraStatus("Connected", StatusTypes.GREEN);
+          setTraybStatus("Connected", StatusTypes.GREEN);
           this.connected = true;
           this.IS_AUX = true;
           setInputAllowed(false);
@@ -258,53 +258,53 @@ export class ConnectorService {
         } else {
           log.info("Authentication failed!");
           messageBox(
-            "Spectra Client - Error",
+            "Trayb Client - Error",
             `Connection failed, reason: ${json.reason}`,
             messageBoxType.ERROR,
           );
           this.setDisconnected();
           this.ws?.disconnect();
-          setSpectraStatus(`Connection Failed`, StatusTypes.RED);
+          setTraybStatus(`Connection Failed`, StatusTypes.RED);
         }
       }
     });
 
     this.ws.on("close", () => {
-      log.info("Connection to spectra server closed");
+      log.info("Connection to trayb server closed");
       if (this.unreachable === true) {
-        setSpectraStatus("Server Unreachable", StatusTypes.RED);
+        setTraybStatus("Server Unreachable", StatusTypes.RED);
 
-        messageBox("Spectra Client - Error", "Spectra server not reachable!", messageBoxType.ERROR);
+        messageBox("Trayb Client - Error", "Trayb server not reachable!", messageBoxType.ERROR);
       } else {
-        // this.win.setTitle(`Spectra Client | Connection closed`);
-        setSpectraStatus("Connection Closed", StatusTypes.NEUTRAL);
+        // this.win.setTitle(`Trayb Client | Connection closed`);
+        setTraybStatus("Connection Closed", StatusTypes.NEUTRAL);
       }
       this.setDisconnected();
       this.ws?.disconnect();
     });
 
     this.ws.on("error", (e: any) => {
-      log.info("Failed connection to spectra server - is it up?");
+      log.info("Failed connection to trayb server - is it up?");
       if (e.code === "ECONNREFUSED") {
-        // this.win.setTitle(`Spectra Client | Connection failed, server not reachable`);
-        setSpectraStatus("Server Unreachable", StatusTypes.RED);
+        // this.win.setTitle(`Trayb Client | Connection failed, server not reachable`);
+        setTraybStatus("Server Unreachable", StatusTypes.RED);
         this.unreachable = true;
       } else {
-        // this.win.setTitle(`Spectra Client | Connection failed`);
-        setSpectraStatus("Connection Failed", StatusTypes.RED);
+        // this.win.setTitle(`Trayb Client | Connection failed`);
+        setTraybStatus("Connection Failed", StatusTypes.RED);
       }
       log.error(e);
     });
 
     this.ws.io.on("reconnect_attempt", (attempt: number) => {
-      log.info(`Reconnecting to spectra server, attempt ${attempt}`);
-      // this.win.setTitle(`Spectra Client | Connection lost, attempting reconnect...`);
-      setSpectraStatus("Reconnecting", StatusTypes.YELLOW);
+      log.info(`Reconnecting to trayb server, attempt ${attempt}`);
+      // this.win.setTitle(`Trayb Client | Connection lost, attempting reconnect...`);
+      setTraybStatus("Reconnecting", StatusTypes.YELLOW);
     });
 
     this.ws.io.on("reconnect", () => {
-      // log.info(`Spectra Client | Reconnected`);
-      setSpectraStatus("Connected", StatusTypes.GREEN);
+      // log.info(`Trayb Client | Reconnected`);
+      setTraybStatus("Connected", StatusTypes.GREEN);
     });
 
     const logonData: IAuxAuthenticationData = {
@@ -373,15 +373,15 @@ export class ConnectorService {
       this.ws?.disconnect();
       this.setDisconnected();
     }
-    // this.win.setTitle(`Spectra Client | Game ended, connection closed.`);
-    setSpectraStatus("Connection Closed", StatusTypes.NEUTRAL);
+    // this.win.setTitle(`Trayb Client | Game ended, connection closed.`);
+    setTraybStatus("Connection Closed", StatusTypes.NEUTRAL);
     setGameStatus("Game Ended", StatusTypes.NEUTRAL);
   }
 
   setDisconnected() {
     this.connected = false;
     setInputAllowed(true);
-    setSpectraStatus("Disconnected", StatusTypes.NEUTRAL);
+    setTraybStatus("Disconnected", StatusTypes.NEUTRAL);
     clearInterval(this.AUX_SEND_INTERVAL);
     this.LAST_HEALTH = 0;
     this.TEAMMATE_STORE_UPDATE = false;

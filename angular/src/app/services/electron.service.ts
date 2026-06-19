@@ -12,7 +12,7 @@ declare global {
 })
 export class ElectronService {
   constructor() {
-    this.api.onSpectraStatusChange(this.changeSpectraStatus.bind(this));
+    this.api.onTraybStatusChange(this.changeTraybStatus.bind(this));
     this.api.onGameStatusChange(this.changeGameStatus.bind(this));
     this.api.fireConnect(this.receiveFireConnectEvent.bind(this));
     this.api.setPlayerName(this.changePlayername.bind(this));
@@ -67,14 +67,14 @@ export class ElectronService {
     this.api.openExternalLink(link);
   }
 
-  private spectraStatusMessageSource = new BehaviorSubject<Status>({
+  private traybStatusMessageSource = new BehaviorSubject<Status>({
     statusType: StatusTypes.NEUTRAL,
     message: "Initializing",
   });
-  public spectraStatusMessage = this.spectraStatusMessageSource.asObservable();
+  public traybStatusMessage = this.traybStatusMessageSource.asObservable();
 
-  protected changeSpectraStatus(status: Status) {
-    this.spectraStatusMessageSource.next(status);
+  protected changeTraybStatus(status: Status) {
+    this.traybStatusMessageSource.next(status);
   }
 
   private gameStatusMessageSource = new BehaviorSubject<Status>({

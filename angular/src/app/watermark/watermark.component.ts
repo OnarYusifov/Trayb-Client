@@ -37,7 +37,7 @@ export class WatermarkComponent {
   @Output()
   validationChanged = new EventEmitter<ValidationState>();
   runValidation() {
-    if (this.data.spectraWatermark) {
+    if (this.data.traybWatermark) {
       this.data.customTextEnabled = false;
     }
 

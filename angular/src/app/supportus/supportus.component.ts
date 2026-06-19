@@ -99,7 +99,7 @@ export class SupportusComponent implements OnInit {
     this.loading = true;
 
     this.http
-      .get<OrgInfo>("https://eu-extras.valospectra.com/getOrgForKey", {
+      .get<OrgInfo>("https://extras.trayb.az/getOrgForKey", {
         params: {
           key: this.key,
         },
@@ -123,7 +123,7 @@ export class SupportusComponent implements OnInit {
   }
 
   protected getPackages() {
-    this.http.get<Package[]>("https://eu-extras.valospectra.com/getSupportPackages").subscribe({
+    this.http.get<Package[]>("https://extras.trayb.az/getSupportPackages").subscribe({
       next: (packages) => {
         this.processPackages(packages);
       },
@@ -170,7 +170,7 @@ export class SupportusComponent implements OnInit {
     this.loggedInOrg = { id: "", name: "Loading..." };
   }
 
-  DISCORD_REDIRECT_URI = "https://eu.valospectra.com:5101/client/oauth-callback";
+  DISCORD_REDIRECT_URI = "https://extras.trayb.az/client/oauth-callback";
 
   protected discordLogin() {
     this.loading = true;

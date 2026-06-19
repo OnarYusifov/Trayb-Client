@@ -48,8 +48,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.on("set-player-name", (_event: any, value: any) => callback(value)),
   setInputAllowed: (callback: (arg0: any) => any) =>
     ipcRenderer.on("set-input-allowed", (_event: any, value: any) => callback(value)),
-  onSpectraStatusChange: (callback: (arg0: any) => any) =>
-    ipcRenderer.on("set-spectra-status", (_event: any, value: any) => callback(value)),
+  onTraybStatusChange: (callback: (arg0: any) => any) =>
+    ipcRenderer.on("set-trayb-status", (_event: any, value: any) => callback(value)),
   onGameStatusChange: (callback: (arg0: any) => any) =>
     ipcRenderer.on("set-game-status", (_event: any, value: any) => callback(value)),
   setLoadingStatus: (callback: (arg0: any) => any) =>

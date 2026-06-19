@@ -18,10 +18,10 @@
   <blockable-div #toBlock>
     <div class="flex flex-col gap-3">
       <div class="flex items-center gap-2">
-        <label for="SpectraWatermarkSwitch">Spectra Watermark</label>
+        <label for="TraybWatermarkSwitch">Trayb Watermark</label>
         <p-toggleswitch
-          id="SpectraWatermarkSwitch"
-          [(ngModel)]="data.spectraWatermark"
+          id="TraybWatermarkSwitch"
+          [(ngModel)]="data.traybWatermark"
           (ngModelChange)="runValidation()"
         ></p-toggleswitch>
       </div>
@@ -30,7 +30,7 @@
         <p-toggleswitch
           id="CustomTextSwitch"
           [(ngModel)]="data.customTextEnabled"
-          [disabled]="data.spectraWatermark"
+          [disabled]="data.traybWatermark"
           (ngModelChange)="runValidation()"
         ></p-toggleswitch>
       </div>

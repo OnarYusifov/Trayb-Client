@@ -332,7 +332,7 @@ export type SponsorInfo = {
 };
 
 export type WatermarkInfo = {
-  spectraWatermark: boolean;
+  traybWatermark: boolean;
   customTextEnabled: boolean;
   customText: string;
 };

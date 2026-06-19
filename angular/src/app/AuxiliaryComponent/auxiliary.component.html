@@ -14,7 +14,7 @@
         [editable]="true"
         id="IngestIpInput"
       ></p-select>
-      <label for="IngestIpInput">Spectra Server</label>
+      <label for="IngestIpInput">Trayb Server</label>
     </p-floatlabel>
     <app-options id="optionsPanelId" class="col-span-3" [isAux]="true"></app-options>
   </div>
@@ -28,7 +28,7 @@
     <img class="h-60 self-center" src="assets/icon.webp" />
     <p class="text-md text-color my-2">
       Status:
-      <p-tag [value]="spectraStatus.message | titlecase" [severity]="spectraStatus.statusType" />
+      <p-tag [value]="traybStatus.message | titlecase" [severity]="traybStatus.statusType" />
     </p>
   </div>
 </div>

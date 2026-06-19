@@ -86,7 +86,6 @@ export class ObserverinfoComponent implements OnInit, Validatable, AfterContentI
   validationChanged = new EventEmitter<ValidationState>();
   runValidation() {
     let valid: boolean = true;
-    valid = this.data.key != "";
     valid = this.data.groupCode != "" && valid;
     valid = this.data.ingestIp != null && valid;
     this.validationChanged.emit(valid ? ValidationState.VALID : ValidationState.INVALID);
@@ -112,7 +111,7 @@ export class ObserverinfoComponent implements OnInit, Validatable, AfterContentI
     this.validationButtonLabel = "Validate";
     this.validationButtonIcon = "pi pi-question-circle";
     this.validationButtonSeverity = "secondary";
-    this.isSupporterChanged.emit(false);
+    this.isSupporterChanged.emit(true);
   }
 
   async validateAccessKey() {
@@ -146,7 +145,7 @@ export class ObserverinfoComponent implements OnInit, Validatable, AfterContentI
   async getOrgForKey(key: string): Promise<{ valid: boolean; isSupporter: boolean }> {
     return new Promise((resolve) => {
       this.http
-        .get<OrgInfo>("https://eu.valospectra.com:5101/getOrgForKey", {
+        .get<OrgInfo>("https://extras.trayb.az/getOrgForKey", {
           params: {
             key: key,
           },
@@ -185,7 +184,7 @@ export class ObserverinfoComponent implements OnInit, Validatable, AfterContentI
   //#endregion
 }
 
-export const ingestServerOptions = ["eu.valospectra.com", "na.valospectra.com"];
+export const ingestServerOptions = ["ingest.trayb.az"];
 
 // Uppercase letters and digits, excluding I and O to avoid confusion with other characters
 const validGroupcodeCharacters = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";

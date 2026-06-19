@@ -8,7 +8,7 @@ import {
   setLoadingStatus,
   setMatchSecret,
   setPlayerName,
-  setSpectraStatus,
+  setTraybStatus,
   StatusTypes,
 } from "../main";
 import { ConnectorService } from "./connectorService";
@@ -58,7 +58,7 @@ export class GameEventsService {
           break;
         }
         log.info(`GEP Updating... New version: ${pkg.version}`);
-        setSpectraStatus("GEP Updating", StatusTypes.YELLOW);
+        setTraybStatus("GEP Updating", StatusTypes.YELLOW);
       }
     });
     auxiliary = isAuxiliary;
@@ -80,7 +80,7 @@ export class GameEventsService {
       log.error("Error setting required features: ", e);
       dialog.showMessageBoxSync(this.win!, {
         title: "Potential GEP Version Issue",
-        message: `GEP version ${this.gepVersion} detected, which does not support Valorant.\nPlease use the shortcuts created by the installer to launch the app.\nContinuing will prevent Spectra from working.`,
+        message: `GEP version ${this.gepVersion} detected, which does not support Valorant.\nPlease use the shortcuts created by the installer to launch the app.\nContinuing will prevent Trayb from working.`,
         type: "warning",
         buttons: ["Understood"],
       });
@@ -99,14 +99,14 @@ export class GameEventsService {
       log.info(`GEP version ${version} ready!`);
 
       if (getMatchSecret() !== "") {
-        setSpectraStatus("Ready (Reconnect Available)", StatusTypes.NEUTRAL);
+        setTraybStatus("Ready (Reconnect Available)", StatusTypes.NEUTRAL);
       } else {
-        setSpectraStatus("Ready", StatusTypes.NEUTRAL);
+        setTraybStatus("Ready", StatusTypes.NEUTRAL);
       }
 
       setTimeout(() => {
         this.win!.setTitle(
-          `Spectra Client | Ready (GEP: ${version}, Spectra: ${app.getVersion()})`,
+          `Trayb Client | Ready (GEP: ${version}, Trayb: ${app.getVersion()})`,
         );
         setLoadingStatus(false);
       }, 300);
@@ -133,7 +133,7 @@ export class GameEventsService {
       if (this.isFirstDetection) {
         this.isFirstDetection = false;
       } else {
-        setSpectraStatus("Ready", StatusTypes.NEUTRAL);
+        setTraybStatus("Ready", StatusTypes.NEUTRAL);
       }
 
       e.enable();

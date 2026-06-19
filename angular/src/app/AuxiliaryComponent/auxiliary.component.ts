@@ -31,7 +31,7 @@ import { OptionsComponent } from "../options/options.component";
   styleUrl: "./auxiliary.component.css",
 })
 export class AuxiliaryComponent implements OnInit {
-  protected spectraStatus: Status = { message: "Initializing", statusType: StatusTypes.NEUTRAL };
+  protected traybStatus: Status = { message: "Initializing", statusType: StatusTypes.NEUTRAL };
   protected darkModeEnabled: boolean = false;
 
   constructor(
@@ -65,8 +65,8 @@ export class AuxiliaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.electron.spectraStatusMessage.subscribe((status: Status) => {
-      this.spectraStatus = status;
+    this.electron.traybStatusMessage.subscribe((status: Status) => {
+      this.traybStatus = status;
       this.changeDetectorRef.detectChanges();
     });
 
@@ -85,7 +85,7 @@ export class AuxiliaryComponent implements OnInit {
     });
   }
 
-  protected ingestServerOptions: string[] = ["EU Server", "NA Server"];
+  protected ingestServerOptions: string[] = ["ingest.trayb.az"];
   protected ingestServerIp: string | undefined = undefined;
   protected playername: string = "";
   protected minimizedToTraySetting: boolean = true;
@@ -106,11 +106,6 @@ export class AuxiliaryComponent implements OnInit {
     }
 
     let ingestIp = this.ingestServerIp;
-    if (ingestIp == this.ingestServerOptions[0]) {
-      ingestIp = "eu.valospectra.com";
-    } else if (ingestIp == this.ingestServerOptions[1]) {
-      ingestIp = "na.valospectra.com";
-    }
     this.electron.processAuxInputs(ingestIp, this.playername);
 
     this.localStorageService.setItem("auxIngestServerIp", this.ingestServerIp);
