@@ -50,10 +50,10 @@ jobs:
         with:
           name: trayb-client-windows
           path: |
-            dist/**/*.exe
-            dist/**/*.blockmap
-            dist/**/*.yml
-            dist/**/*.7z
+            dist/Trayb-Client-Setup.exe
+            dist/*.nsis.7z
+            dist/latest.yml
+            dist/*.blockmap
           if-no-files-found: error
 
       - name: Create GitHub release
@@ -64,7 +64,7 @@ jobs:
           name: Trayb Client ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
           prerelease: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || false }}
           files: |
-            dist/**/*.exe
-            dist/**/*.blockmap
-            dist/**/*.yml
-            dist/**/*.7z
+            dist/Trayb-Client-Setup.exe
+            dist/*.nsis.7z
+            dist/latest.yml
+            dist/*.blockmap
