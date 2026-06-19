@@ -58,9 +58,10 @@
       ],
       "publish": {
         "provider": "github",
-        "owner": "Trayb",
+        "owner": "OnarYusifov",
+        "repo": "Trayb-Client",
         "publishAutoUpdate": true,
-        "releaseType": "draft"
+        "releaseType": "release"
       }
     }
   },
